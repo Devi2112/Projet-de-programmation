@@ -1,7 +1,7 @@
 # Projet-de-programmation
 # Les membres du groupe: 
 Diomandé Vatogba Idrisa,
-Ami Pouye,
+Amy Pouye,
 Peijun GE
 
 from bs4 import BeautifulSoup
