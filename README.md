@@ -4,10 +4,11 @@ Diomandé Vatogba Idrisa,
 Amy Pouye,
 Peijun GE
 
-## Mégarama présenration :
+## Mégarama présentation :
 Le Groupe Mégarama compte 30 cinémas représentant 226 écrans, implantés en France, en Espagne et Maroc.
 Mégarama a débuté ses activités en 1950 grâce à son fondateur Jean-Pierre Lemoine, amoureux inconditionnel du spectacle cinématographique.
-## Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin d'automatiser tous les films diffusés du jour,de tous les cinémas Mégarama en France,les heures de début et de fin pour chaque film et leur version.
+
+Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin d'automatiser tous les films diffusés du jour,de tous les cinémas Mégarama en France,les heures de début et de fin pour chaque film et leur version.
 
 ## la structure de notre codes: 
    1. Capture tous les liens des horaires de cinéma de toutes les villes et les stocker dans un dict. 
@@ -16,7 +17,7 @@ Mégarama a débuté ses activités en 1950 grâce à son fondateur Jean-Pierre 
    4. Stocker tous les info dans un dict générale à l'aide de deux boucles
    5. Affcher les résultats
 
-## fonction qui crée un dictionnaire contenant les URL des horaires de cinéma de toutes les villes en fonction de leurs pages d'accueil. 
+## fonction pour créer un dictionnaire contenant les URL des horaires de cinéma de toutes les villes en fonction de leurs pages d'accueil. 
 
     from bs4 import BeautifulSoup
     import urllib3
@@ -48,9 +49,10 @@ Mégarama a débuté ses activités en 1950 grâce à son fondateur Jean-Pierre 
                 link_horaire = url.group(1)
                 links_horaire.update({ville:link_horaire})
         return links_horaire
-        links_horaire = get_url_horaire()
-        links_horaire
-        # un dict contenant les URLs des horaires de cinéma de toutes les villes
+     
+     links_horaire = get_url_horaire()
+     links_horaire
+     # un dict contenant les URLs des horaires de cinéma de toutes les villes
 
 
 ## fonction pour diviser l'intervalle de code source pour tous les films dans chaque ville en fonction de leur code source du site.
