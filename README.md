@@ -1,4 +1,4 @@
-# Projet-de-programmation:Mégarama
+# Projet-de-programmation: Mégarama
 # Les membres du groupe: 
 Diomandé Vatogba Idrisa,
 Amy Pouye,
