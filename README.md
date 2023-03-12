@@ -112,7 +112,7 @@ Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin 
     tous.update({date:tous_villes_tous_movies})
     tous
 
-   ##résultats 
+   ## résultats 
    
     print(tous[date]['garat']) # tous les films du mégarama à Garat aujourd'hui
     print(tous[date]['garat'][0]) # les séances du premier film du mégarama à Garat aujourd'hui
