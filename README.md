@@ -1,6 +1,6 @@
 # Projet-de-programmation: Mégarama
 # Les membres du groupe: 
-Diomandé Vatogba Idrisa,
+Diomandé Vatogba Idrissa,
 Amy Pouye,
 Peijun GE
 
