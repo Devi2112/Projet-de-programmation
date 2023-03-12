@@ -17,7 +17,7 @@ Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin 
    4. Stocker tous les info dans un dict général à l'aide de deux boucles
    5. Affcher les résultats
 
-## fonction pour créer un dictionnaire contenant les URL des horaires de cinéma de toutes les villes en fonction de leurs pages d'accueil. 
+## Fonction pour créer un dictionnaire contenant les URL des horaires de cinéma de toutes les villes en fonction de leurs pages d'accueil. 
 
     from bs4 import BeautifulSoup
     import urllib3
@@ -55,7 +55,7 @@ Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin 
      # un dict contenant les URLs des horaires de cinéma de toutes les villes
 
 
-## fonction pour diviser l'intervalle de code source pour tous les films dans chaque ville en fonction de leur code source du site.
+## Fonction pour diviser l'intervalle de code source pour tous les films dans chaque ville en fonction de leur code source du site.
 
     def get_movies(link_horaire): 
         # link_horaire: l'URL des horaires de cinéma de chaque ville, càd un élément du dict obtenu précédent.
@@ -72,7 +72,7 @@ Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin 
         return movies
 
 
-## fonction pour déterminer toutes les séances pour chaque film de la journée 
+## Fonction pour déterminer toutes les séances pour chaque film de la journée 
     def get_debut_fin_version(movie):
         '''
             Il s'agit d'une fonction qui donnera la date, l'horaire de sortie et la version à 
@@ -93,7 +93,7 @@ Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin 
    
     
     
-   ## imprimer les outputs de la fonction
+   ## Imprimer les outputs de la fonction
    
     # on crée une liste qui contient tous les info du film, et les stocker dans un dict à la fin
     tous_villes_tous_movies = dict()
@@ -112,7 +112,7 @@ Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin 
     tous.update({date:tous_villes_tous_movies})
     tous
 
-   ## résultats 
+   ## Résultats 
    
     print(tous[date]['garat']) # tous les films du mégarama à Garat aujourd'hui
     print(tous[date]['garat'][0]) # les séances du premier film du mégarama à Garat aujourd'hui
