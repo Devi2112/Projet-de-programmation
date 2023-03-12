@@ -10,7 +10,7 @@ Mégarama a débuté ses activités en 1950 grâce à son fondateur Jean-Pierre 
 
 Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin d'automatiser tous les films diffusés du jour,de tous les cinémas Mégarama en France,les heures de début et de fin pour chaque film et leur version.
 
-## la structure de notre codes: 
+## La structure de notre codes: 
    1. Capture tous les liens des horaires de cinéma de toutes les villes et les stocker dans un dict. 
   2. diviser l'intervalle de code source pour tous les films dans chaque ville 
    3. Collecter tous les information du film (la date, l'horaire de sortie et la versio)
@@ -93,7 +93,7 @@ Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin 
    
     
     
-   ##imprimer les outputs de la fonction.
+   ## imprimer les outputs de la fonction.
    
     # on crée une liste qui contient tous les info du film, et les stocker dans un dict à la fin
     tous_villes_tous_movies = dict()
