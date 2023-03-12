@@ -9,121 +9,60 @@ Le Groupe Mégarama compte 30 cinémas représentant 226 écrans, implantés en 
 Mégarama a débuté ses activités en 1950 grâce à son fondateur Jean-Pierre Lemoine, amoureux inconditionnel du spectacle cinématographique.
 ## Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin d'automatiser tous les films diffusés du jour,de tous les cinémas Mégarama en France,les heures de début et de fin pour chaque film et leur version.
 
+## la structure de notre codes: 
+#   1. Capture tous les liens des horaires de cinéma de toutes les villes et les stocker dans un dict. 
+#   2. diviser l'intervalle de code source pour tous les films dans chaque ville 
+#   3. Collecter tous les information du film (la date, l'horaire de sortie et la versio)
+#   4. Stocker tous les info dans un dict générale à l'aide de deux boucles
+#   5. Affcher les résultats
 
+## fonction qui crée un dictionnaire contenant les URL des horaires de cinéma de toutes les villes en fonction de leurs pages d'accueil. 
 
 from bs4 import BeautifulSoup
 import urllib3
-
-req = urllib3.PoolManager()
-res = req.request('GET', 'https://beaux-arts.megarama.fr/FR/43/horaires-cinema-beaux-arts-besancon.html')
-soup = BeautifulSoup(res.data, 'html.parser')
-content = soup.find_all('div' ,class_= 'container-horaires')
-content
-
-movies = str(content).split('<!-- fin picto-->')
-for movie in movies:
-    print(movie)
-  
- movies = movies[1:]
-for movie in movies:
-    print(movie)
-
-
-## fonction pour déterminer toutes les séances pour chaque film de la journée 
 import re
+import tqdm
 
-def get_debut_fin_version(movie):
-    position_str = str(movie).find('<a categorie=') # où se trouve la chaîne de caractères '<a categorie='
-    position_date = position_str + len('<a categorie=') + 1 # Où se trouve la date
-    date = str(movie)[position_date : position_date + 10] 
 
-    film = re.findall('<div class="afficheTitre fittext1">(.*?)</div>',str(movie))
-    debut = re.findall('<div class="heure">(.*?)</div>',str(movie))
-    fin = re.findall('<div class="heureFin"><i>(.*?)</i></div>',str(movie))
-    version = re.findall('class="version">(.*?)</div>',str(movie))
-    
-    
-    return date,film, debut, fin, version
-   
-    
-    
-    ##imprimer les outputs de la fonction. 
-for movie in movies:
-    print(get_debut_fin_version(movie))
-    
-    ## Liens des cinémas Mégarama
-   
-   from bs4 import BeautifulSoup
-import urllib3
-import re
+def get_url_horaire():
+    '''
+        C'est une fonction qui crée un dictionnaire contenant les URL des horaires 
+        de cinéma de toutes les villes en fonction de leurs pages d'accueil. 
+    '''
+    req = urllib3.PoolManager()
+    res = req.request('GET', 'https://megarama.fr/index-france.html')
+    soup = BeautifulSoup(res.data, 'html.parser')
+    urlpages = re.findall('<span class="cache-trait">-</span> <a href=(.*?)</a>',str(soup))
+    links_acceuil = re.findall('"(.*?)"',str(urlpages)) 
+    # une liste contenue le page d'accueil de tous les sites de cinéma de la ville
+    # Par exemple, ["https://beaux-arts.megarama.fr/", ...]
 
-req = urllib3.PoolManager()
-#res = req.request('GET', 'https://beaux-arts.megarama.fr/FR/43/horaires-cinema-beaux-arts-besancon.html')
-res = req.request('GET', 'https://megarama.fr/index-france.html')
-
-soup = BeautifulSoup(res.data, 'html.parser')
-urlpages = re.findall('<span class="cache-trait">-</span> <a href=(.*?)</a>',str(soup))
-links = re.findall('"(.*?)"',str(urlpages)) # ["https://beaux-arts.megarama.fr/", ....]
-
-def get_url(links):
-    cleaned_links = []
-    urls = []
-    for link in links:
+    links_horaire = {}
+    for link in links_acceuil:
         res = req.request('GET', link)
         soup = BeautifulSoup(res.data, 'html.parser')
-        urls += [re.findall('<a class="nav-link" href="(.*?)">Horaires',str(soup))]
-    for url in urls:
-        if url != [] and 'horaires-cinema' in url[0]:
-            cleaned_links += [url[0]]
-    return cleaned_links
-cleaned_links = get_url(links)
-print(cleaned_links)
+        url = re.search('<a class="nav-link" href="(.*?)">Horaires',str(soup))
+        if url != None and 'megarama' in url.group(1):
+            # Pour filtrer les sites qui ne sont pas de type None et qui contiennent 'megarama'
+            ville = re.search('https://(.*?).megarama', str(url.group(1))).group(1)
+            link_horaire = url.group(1)
+            links_horaire.update({ville:link_horaire})
+    return links_horaire
+links_horaire = get_url_horaire()
+links_horaire
+# un dict contenant les URLs des horaires de cinéma de toutes les villes
 
 
-# code final
-from bs4 import BeautifulSoup
-import urllib3
-import re
+## fonction pour diviser l'intervalle de code source pour tous les films dans chaque ville en fonction de leur code source du site.
 
-req = urllib3.PoolManager()
-res = req.request('GET', 'https://megarama.fr/index-france.html')
-soup = BeautifulSoup(res.data, 'html.parser')
-urlpages = re.findall('<span class="cache-trait">-</span> <a href=(.*?)</a>',str(soup))
-links = re.findall('"(.*?)"',str(urlpages)) 
-# Page d'accueil de tous les sites de cinéma de la ville
-# Par exemple, ["https://beaux-arts.megarama.fr/", ...]
-print(links)
-
-def get_url(links):
+def get_movies(link_horaire): 
+    # link_horaire: l'URL des horaires de cinéma de chaque ville, càd un élément du dict obtenu précédent.
     '''
-        C'est une fonction qui crée une liste contenant les URL des horaires 
-        de cinéma de toutes les villes en fonction des pages d'accueil obtenus
-        précédents. 
+        Il s'agit d'une fonction qui divise l'intervalle de code source pour tous les films 
+        dans chaque ville en fonction de leaur code source du site.
     '''
-    cleaned_links = []
-    urls = []
-    for link in links:
-        res = req.request('GET', link)
-        soup = BeautifulSoup(res.data, 'html.parser')
-        urls += [re.findall('<a class="nav-link" href="(.*?)">Horaires',str(soup))]
-    for url in urls:
-        if url != [] and 'megarama' in url[0]:
-            # Pour filtrer les sites qui ne sont pas vides et qui contiennent 'megarama'
-            cleaned_links += [url[0]]
-    return cleaned_links
-cleaned_links = get_url(links)
-print(cleaned_links) 
-# une liste contenant les URL des horaires de cinéma de toutes les villes
-
-
-
-def get_movies(cleaned_link): 
-    # cleaned_link: l'URL des horaires de cinéma de chaque ville, càd un élément de la liste obtenue précédente
-    '''
-        Il s'agit d'une fonction qui divise l'intervalle de code pour tous les films 
-        dans chaque ville en fonction du code source du site.
-    '''
-    res = req.request('GET', cleaned_link)
+    req = urllib3.PoolManager()
+    res = req.request('GET', link_horaire)
     soup = BeautifulSoup(res.data, 'html.parser')
     content = soup.find_all('div' ,class_= 'container-horaires')
     movies = str(content).split('<!-- fin picto-->')
@@ -131,33 +70,51 @@ def get_movies(cleaned_link):
     return movies
 
 
-def get_debut_fin_version(movie, cleaned_link):
+## fonction pour déterminer toutes les séances pour chaque film de la journée 
+def get_debut_fin_version(movie):
     '''
-        Il s'agit d'une fonction qui donnera la ville du cinéma, la date et 
-        l'horaire de sortie et la version à partir de l'intervalle de code 
-        du film et URL obtenus par les fonctions précédentes.
+        Il s'agit d'une fonction qui donnera la date, l'horaire de sortie et la version à 
+        partir de l'intervalle de code source du film.
     '''
-    ville = re.findall('https://(.*?).megarama', str(cleaned_link))
     date = re.findall('<a categorie="(.*?) ', str(movie))[0]
     film = re.findall('<div class="afficheTitre fittext1">(.*?)</div>',str(movie))
     debut = re.findall('<div class="heure">(.*?)</div>',str(movie))
     fin = re.findall('<div class="heureFin"><i>(.*?)</i></div>',str(movie))
-    
     version = re.findall('class="version">(.*?)</div>',str(movie))
-    if len(str(version)) > 40: 
-        # les codes source de site annecy est différent que d'autres
+    if len(str(version)) > 40:
+        # les codes sources de site annecy est différent que d'autres
         version= re.findall('<div class="col-3 col-sm-3 col-lg-2 BTH (.*?)"', str(movie))
 
-    return ville, date, film, debut, fin, version
-        
-   
-   ##imprimer les outputs de la fonction.
 
-for cleaned_link in cleaned_links:
-    for movie in get_movies(cleaned_link):
-        print(get_debut_fin_version(movie, cleaned_link))
-        
-   
+    return  date, film, debut, fin, version
 
+   
     
     
+    ##imprimer les outputs de la fonction.
+ # on crée une liste qui contient tous les info du film, et les stocker dans un dict à la fin
+tous_villes_tous_movies = dict()
+for ville in tqdm.tqdm(links_horaire):
+    tous_info = [] # Cette liste est vidée après chaque boucle 
+    link_horaire = links_horaire[ville]
+    for movie in get_movies(link_horaire):
+        date ,film, debut, fin, version = get_debut_fin_version(movie)
+        info = {'film':film, 'heure debut':debut, 'heure fin':fin, 'version du film':version}
+        # on stocke l'information d'un film dans un dict 
+        tous_info.append(info)
+        # on met le dict d'info dans la liste, c'est une liste contient tous les films de chaque ville
+    tous_villes_tous_movies.update({ville:tous_info})
+    # on stocke les info du film pour chaque ville      
+
+tous = dict()
+tous.update({date:tous_villes_tous_movies})
+tous
+
+##résultats        
+print(tous[date]['garat']) # tous les films du mégarama à Garat aujourd'hui
+print(tous[date]['garat'][0]) # les séances du premier film du mégarama à Garat aujourd'hui
+
+
+
+
+
