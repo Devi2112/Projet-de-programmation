@@ -12,9 +12,9 @@ Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin 
 
 ## La structure de notre codes: 
    1. Capture tous les liens des horaires de cinéma de toutes les villes et les stocker dans un dict. 
-  2. diviser l'intervalle de code source pour tous les films dans chaque ville 
-   3. Collecter tous les information du film (la date, l'horaire de sortie et la versio)
-   4. Stocker tous les info dans un dict générale à l'aide de deux boucles
+   2. diviser l'intervalle de code source pour tous les films dans chaque ville 
+   3. Collecter tous les information du film (la date, l'horaire de sortie et la version)
+   4. Stocker tous les info dans un dict général à l'aide de deux boucles
    5. Affcher les résultats
 
 ## fonction pour créer un dictionnaire contenant les URL des horaires de cinéma de toutes les villes en fonction de leurs pages d'accueil. 
