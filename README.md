@@ -93,7 +93,7 @@ Dans le cadre notre projet,nous avons travaillé avec le site de Mégarama afin 
    
     
     
-   ## imprimer les outputs de la fonction.
+   ## imprimer les outputs de la fonction
    
     # on crée une liste qui contient tous les info du film, et les stocker dans un dict à la fin
     tous_villes_tous_movies = dict()
